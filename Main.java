@@ -4,55 +4,82 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Create hosts and VMs based on the specifications
-        Host host1 = new Host(1, 4096, 1860);
-        host1.addVM(new VM(0, 512, 250));
-        host1.addVM(new VM(1, 1024, 500));
+        // Create hosts based on HP ProLiant specifications from the paper
+        Host host1 = new Host(1, 1860, 4096); // HP ProLiant ML110 G4
+        Host host2 = new Host(2, 2660, 4096); // HP ProLiant ML110 G5
 
-        Host host2 = new Host(2, 4096, 2660);
-        host2.addVM(new VM(2, 1024, 1000));
-        host2.addVM(new VM(3, 2048, 1000));
+        // Create VMs based on Amazon EC2 instance types mentioned in the paper
+        host1.addVM(new VM(0, 250, 512));  // Small instance
+        host1.addVM(new VM(1, 500, 1024)); // Medium instance
+        host2.addVM(new VM(2, 1000, 1024)); // Large instance
+        host2.addVM(new VM(3, 1000, 2048)); // Extra Large instance
+        host2.addVM(new VM(4, 2000, 2048)); // Double Extra Large instance
 
+        // Generate task sets
+        System.out.println("Generating tasks...");
         List<Task> tasks50 = generateTasks(50);
         List<Task> tasks100 = generateTasks(100);
         List<Task> tasks150 = generateTasks(150);
         List<Task> tasks200 = generateTasks(200);
 
-        // Create CSA instance with tasks for 50 tasks
-        CSA csa50 = new CSA(tasks50, Arrays.asList(host1, host2));
+        // Run simulation for 50 tasks
+        System.out.println("\nRunning simulation for 50 tasks...");
+        runSimulationSet(tasks50, host1, host2);
 
-        // Create scheduler and simulation instances for each task count
-        TaskScheduler scheduler50 = new TaskScheduler(tasks50, Arrays.asList(host1, host2));
-        Simulation simulation = new Simulation();
+        // Reset host resources
+        resetHosts(host1, host2);
 
-        System.out.println("Running simulation for 50 tasks...");
-        simulation.runSimulation(tasks50, scheduler50, csa50);
+        // Run simulation for 100 tasks
+        System.out.println("\nRunning simulation for 100 tasks...");
+        runSimulationSet(tasks100, host1, host2);
 
-        // Repeat the process for 100, 150, 200 tasks
-        CSA csa100 = new CSA(tasks100, Arrays.asList(host1, host2));
-        TaskScheduler scheduler100 = new TaskScheduler(tasks100, Arrays.asList(host1, host2));
-        System.out.println("Running simulation for 100 tasks...");
-        simulation.runSimulation(tasks100, scheduler100, csa100);
-        
-        CSA csa150 = new CSA(tasks150, Arrays.asList(host1, host2));
-        TaskScheduler scheduler150 = new TaskScheduler(tasks150, Arrays.asList(host1, host2));
-        System.out.println("Running simulation for 150 tasks...");
-        simulation.runSimulation(tasks150, scheduler150, csa150);
-        
-        CSA csa200 = new CSA(tasks200, Arrays.asList(host1, host2));
-        TaskScheduler scheduler200 = new TaskScheduler(tasks200, Arrays.asList(host1, host2));
-        System.out.println("Running simulation for 200 tasks...");
-        simulation.runSimulation(tasks200, scheduler200, csa200);
+        // Reset host resources
+        resetHosts(host1, host2);
+
+        // Run simulation for 150 tasks
+        System.out.println("\nRunning simulation for 150 tasks...");
+        runSimulationSet(tasks150, host1, host2);
+
+        // Reset host resources
+        resetHosts(host1, host2);
+
+        // Run simulation for 200 tasks
+        System.out.println("\nRunning simulation for 200 tasks...");
+        runSimulationSet(tasks200, host1, host2);
     }
 
-    // Utility function to generate tasks with random CPU and RAM requirements within a reasonable range
+    private static void runSimulationSet(List<Task> tasks, Host host1, Host host2) {
+        // Create CSA instance
+        CSA csa = new CSA(tasks, Arrays.asList(host1, host2));
+        
+        // Create scheduler
+        TaskScheduler scheduler = new TaskScheduler(tasks, Arrays.asList(host1, host2));
+        
+        // Create and run simulation
+        Simulation simulation = new Simulation();
+        simulation.runSimulation(tasks, scheduler, csa);
+    }
+
+    private static void resetHosts(Host host1, Host host2) {
+        host1.usedCpu = 0;
+        host1.usedRam = 0;
+        host2.usedCpu = 0;
+        host2.usedRam = 0;
+    }
+
     private static List<Task> generateTasks(int numTasks) {
         List<Task> tasks = new ArrayList<>();
         for (int i = 0; i < numTasks; i++) {
-            // Generate tasks with CPU and RAM requirements within reasonable limits (based on VM capacities)
-            int cpuRequired = (int) (Math.random() * 1000) + 100; // CPU between 100 and 1000 MIPS
-            int ramRequired = (int) (Math.random() * 500) + 100; // RAM between 100 and 500 MB
-            tasks.add(new Task(i, cpuRequired, ramRequired));
+            // Generate tasks with requirements based on the paper's specifications
+            // CPU requirements between 250 and 2000 MIPS
+            int cpuRequired = (int) (Math.random() * 1750) + 250;
+            
+            // RAM requirements between 512 and 2048 MB
+            int ramRequired = (int) (Math.random() * 1536) + 512;
+            
+            // Create task with these requirements
+            Task task = new Task(i, cpuRequired, ramRequired);
+            tasks.add(task);
         }
         return tasks;
     }
