@@ -336,7 +336,7 @@ private double evaluateFitness(TaskAllocation allocation) {
 ### 4.1 Hasil Pengujian
 Berikut adalah hasil rata-rata pengujian dari 10 run.
 
-| Jumlah Tasks | Execution Time (ms) | Power Consumption (W) | SLAV |
+| Jumlah Tasks | Execution Time (s) | Power Consumption (W) | SLAV |
 |--------------|-------------------|--------------------|------|
 | 50          | 12320.6        | 45750.9            | 0.313 |
 | 100         | 13471.1       | 53779.9            |0.337 |
