@@ -1,3 +1,8 @@
+# About This Readme ngabs
+- [Rancangan PPT](#rancangan-ppt)
+- [Rancangan Laporan](#implementasi-multi-objective-crow-search-algorithm-untuk-optimasi-manajemen-sumber-daya-pada-cloud-data-center)
+
+
 # Rancangan PPT
 # Implementasi Multi-objective Crow Search Algorithm untuk Manajemen Sumber Daya Cloud
 
