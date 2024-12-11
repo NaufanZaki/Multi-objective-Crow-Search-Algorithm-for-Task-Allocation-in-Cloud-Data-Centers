@@ -11,7 +11,7 @@ Crow Search Algorithm (CSA) adalah algoritma meta-heuristik yang terinspirasi da
 - Optimasi alokasi tasks ke host
 - Minimalisasi konsumsi daya
 - Minimalisasi waktu eksekusi
-- Minimalisasi pelanggaran SLA
+- Minimalisasi pelanggaran SLA.
 
 ### B. Komponen Utama dan Implementasi
 
